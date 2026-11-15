@@ -9,63 +9,80 @@
 import SwiftUI
 import Playgrounds
 
+// MARK: - Learning Goal View
+
+// Input: The saved goal name and selected learning period.
+// Description: Allows users to edit and update their goal.
+// Output: Saves the new goal and opens the activity screen.
+
 struct LearningGoalView: View {
+
+    // MARK: - Properties
 
     @State private var showPopup = false
     @State private var navigateToCurrentDay = false
-    @State private var learn = ""
-    @State private var selectedPeriod: LearningPeriod = .week
-    @AppStorage("hasSavedGoal") private var hasSavedGoal = false
-    @AppStorage("goalName") private var savedGoalName = ""
-    @AppStorage("goalPeriod") private var savedGoalPeriod = "Week"
-    @AppStorage("goalStartDate") private var savedGoalStartDate = 0.0
+
     @State private var viewModel = LearningGoalViewModel()
+
+
+    // MARK: - View Body
+
     var body: some View {
 
         NavigationStack {
 
             VStack(alignment: .leading, spacing: 20) {
 
+                // MARK: - Goal Name
+
                 Text("I want to learn")
 
-                TextField("Swift", text: $learn)
+                TextField("Swift", text: $viewModel.goalName)
                     .textFieldStyle(.roundedBorder)
+
+
+                // MARK: - Learning Period
 
                 Text("I want to learn it in a")
 
                 HStack(spacing: 12) {
 
                     Button("Week") {
-                        selectedPeriod = .week
+                        viewModel.selectedPeriod = .week
                     }
                     .frame(width: 84, height: 46)
                     .glassEffect(
                         .regular.tint(
-                            selectedPeriod == .week ? .orange : .clear
+                            viewModel.selectedPeriod == .week
+                            ? .orange : .clear
                         ),
                         in: .capsule
                     )
                     .foregroundStyle(.white)
+
 
                     Button("Month") {
-                        selectedPeriod = .month
+                        viewModel.selectedPeriod = .month
                     }
                     .frame(width: 84, height: 46)
                     .glassEffect(
                         .regular.tint(
-                            selectedPeriod == .month ? .orange : .clear
+                            viewModel.selectedPeriod == .month
+                            ? .orange : .clear
                         ),
                         in: .capsule
                     )
                     .foregroundStyle(.white)
 
+
                     Button("Year") {
-                        selectedPeriod = .year
+                        viewModel.selectedPeriod = .year
                     }
                     .frame(width: 84, height: 46)
                     .glassEffect(
                         .regular.tint(
-                            selectedPeriod == .year ? .orange : .clear
+                            viewModel.selectedPeriod == .year
+                            ? .orange : .clear
                         ),
                         in: .capsule
                     )
@@ -78,15 +95,25 @@ struct LearningGoalView: View {
             .navigationTitle("Learning Goal")
             .navigationBarTitleDisplayMode(.inline)
 
+
             // MARK: - Toolbar
 
+            // Input: The checkmark button tap.
+            // Description: Opens the update confirmation popup.
+            // Output: Displays the confirmation popup.
+
             .toolbar {
+
                 ToolbarItem(placement: .topBarTrailing) {
+
                     Button {
+
                         withAnimation(.easeInOut(duration: 0.25)) {
                             showPopup = true
                         }
+
                     } label: {
+
                         Image(systemName: "checkmark")
                             .font(.system(size: 18, weight: .bold))
                             .foregroundStyle(.white)
@@ -97,10 +124,17 @@ struct LearningGoalView: View {
                 }
             }
 
+
             // MARK: - Custom Popup
 
+            // Input: The user's confirmation to update the goal.
+            // Description: Displays confirmation and cancellation.
+            // Output: Saves the new goal after confirmation.
+
             .overlay {
+
                 if showPopup {
+
                     ZStack {
 
                         Color.black.opacity(0.55)
@@ -120,15 +154,23 @@ struct LearningGoalView: View {
                             Text("If you update now, your streak will start over.")
                                 .font(.system(size: 20))
                                 .foregroundStyle(.gray)
-                                .fixedSize(horizontal: false, vertical: true)
+                                .fixedSize(
+                                    horizontal: false,
+                                    vertical: true
+                                )
 
                             HStack(spacing: 10) {
 
+                                // MARK: - Dismiss Button
+
                                 Button {
+
                                     withAnimation {
                                         showPopup = false
                                     }
+
                                 } label: {
+
                                     Text("Dismiss")
                                         .font(.system(size: 20))
                                         .frame(maxWidth: .infinity)
@@ -140,12 +182,25 @@ struct LearningGoalView: View {
                                     in: Capsule()
                                 )
 
+
+                                // MARK: - Update Button
+
+                                // Input: Updated goal name and period.
+                                // Description: Saves the goal if valid.
+                                // Output: Opens CurrentDayView
+                                //         with the selected period.
+
                                 Button {
-                                    viewModel.saveGoal()
+
+                                    guard viewModel.saveGoal() else {
+                                        return
+                                    }
+
                                     showPopup = false
                                     navigateToCurrentDay = true
-                                    
+
                                 } label: {
+
                                     Text("Update")
                                         .font(.system(size: 20))
                                         .frame(maxWidth: .infinity)
@@ -175,14 +230,26 @@ struct LearningGoalView: View {
                 }
             }
 
+
             // MARK: - Navigation
 
-            .navigationDestination(isPresented: $navigateToCurrentDay) {
-                CurrentDayView(selectedPeriod: selectedPeriod)
+            // Input: The successfully saved learning period.
+            // Description: Navigates to the updated goal.
+            // Output: CurrentDayView with the new period.
+
+            .navigationDestination(
+                isPresented: $navigateToCurrentDay
+            ) {
+                CurrentDayView(
+                    selectedPeriod: viewModel.selectedPeriod
+                )
             }
         }
     }
 }
+
+
+// MARK: - Preview
 
 #Preview {
     LearningGoalView()
