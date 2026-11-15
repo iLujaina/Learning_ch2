@@ -11,12 +11,14 @@ import HorizonCalendar
 
 struct BeginningView: View {
     @State private var isLearned = false
+    @State private var history = LearningHistoryStore()
+    @StateObject private var calendarProxy = CalendarViewProxy()
+    
     private var calendar: Calendar {
         var calendar = Calendar(identifier: .gregorian)
         calendar.firstWeekday = 1
         return calendar
     }
-    
     private var startDate: Date {
         calendar.date(
             from: DateComponents(
@@ -45,7 +47,8 @@ struct BeginningView: View {
             monthsLayout: .vertical(
                 options: VerticalMonthsLayoutOptions()
             ),
-            dataDependency: nil
+            dataDependency: nil,
+            proxy: calendarProxy
         )
         .monthHeaders { month in
 
@@ -56,6 +59,7 @@ struct BeginningView: View {
                     day: 1
                 )
             )!
+            // MARK: - aaaaaaa
 
             Text(date, format: .dateTime
                 .month(.wide)
@@ -77,7 +81,15 @@ struct BeginningView: View {
                 .font(.system(size: 16))
                 .frame(width: 36, height: 36)
                 .background {
-                    if calendar.isDate(date, inSameDayAs: Date()) {
+                    if history.isLearned(date) {
+                        Circle()
+                            .fill(Color.orange.opacity(0.45))
+
+                    } else if history.isFreezed(date) {
+                        Circle()
+                            .fill(Color.blue.opacity(0.45))
+
+                    } else if calendar.isDate(date, inSameDayAs: Date()) {
                         Circle()
                             .fill(Color.orange)
                     }
@@ -94,6 +106,13 @@ struct BeginningView: View {
                 trailing: 16
             )
         )
+        .onAppear {
+            calendarProxy.scrollToMonth(
+                containing: Date(),
+                scrollPosition: .firstFullyVisiblePosition,
+                animated: false
+            )
+        }
         .frame(
             maxWidth: .infinity,
             maxHeight: .infinity

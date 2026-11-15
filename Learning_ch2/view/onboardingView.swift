@@ -10,6 +10,7 @@ import Playgrounds
 struct onboardingView: View {
     @State private var learn=""
     @State private var selectedPeriod: LearningPeriod = .week
+    @State private var navigateToCurrentDay = false
     var body: some View {
         NavigationStack {
             VStack {
@@ -77,14 +78,30 @@ struct onboardingView: View {
                 }.frame(maxWidth:.infinity, alignment:.leading)
                 
                 Spacer()
-                NavigationLink(destination: CurrentDayView(selectedPeriod: selectedPeriod)) {
+                Button {
+                    let goalName = learn.trimmingCharacters(in: .whitespacesAndNewlines)
+
+                    guard !goalName.isEmpty else { return }
+
+                    UserDefaults.standard.set(goalName, forKey: "goalName")
+                    UserDefaults.standard.set(selectedPeriod.rawValue, forKey: "goalPeriod")
+                    UserDefaults.standard.set(Date(), forKey: "goalStartDate")
+                    UserDefaults.standard.set(true, forKey: "hasSavedGoal")
+
+                    navigateToCurrentDay = true
+
+                } label: {
                     Text("Start Learning")
                         .frame(width: 151, height: 46)
                         .background(.orange)
                         .foregroundStyle(.white)
                         .cornerRadius(22)
                 }
+                .disabled(learn.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .opacity(learn.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.5 : 1)
                 Text("You can edit your desire later")
+            }.navigationDestination(isPresented: $navigateToCurrentDay) {
+                CurrentDayView(selectedPeriod: selectedPeriod)
             }
            
             

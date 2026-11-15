@@ -119,8 +119,11 @@ class CurrentDayViewModel {
     }
     
    
+   
     func freezeDay() {
+
         refreshStatus()
+
         guard canFreeze else { return }
 
         let now = Date()
@@ -130,15 +133,23 @@ class CurrentDayViewModel {
 
         if wasLearned {
             activity.learnedDates.remove(today)
-        } else {
-            registerStreakActivity(at: now)
+
+           
+            streak.currentStreak = max(
+                0,
+                streak.currentStreak - 1
+            )
         }
 
         activity.freezedDates.insert(today)
         activity.isFreezed = true
 
+        
+        streak.lastActivityDate = now
+
         updateActivityCounters()
     }
+
 
    
     var remainingFreezes: Int {
@@ -202,12 +213,11 @@ class CurrentDayViewModel {
         updateStreak(now: now)
     }
     func updateStreak(now: Date = Date()) {
-
         guard goal.status == .active else { return }
 
         let lastDate = streak.lastActivityDate ?? goalStartDate
 
-        if now.timeIntervalSince(lastDate) >= 32 * 60 * 60 {
+        if now.timeIntervalSince(lastDate) >= 2 * 60 {
             streak.currentStreak = 0
             streak.lastActivityDate = nil
         }
@@ -245,5 +255,52 @@ class CurrentDayViewModel {
             && $0 < goalEndDate
         }.count
     }
+    func removeLearning() {
+        let today = calendar.startOfDay(for: Date())
+
+        guard activity.learnedDates.contains(today) else {
+            return
+        }
+
+        activity.learnedDates.remove(today)
+
+        streak.currentStreak = max(0, streak.currentStreak - 1)
+
+       
+        let lastLearnedDate = activity.learnedDates.max()
+        let lastFreezeDate = activity.freezedDates.max()
+
+        streak.lastActivityDate = [
+            lastLearnedDate,
+            lastFreezeDate
+        ]
+        .compactMap { $0 }
+        .max()
+
+        updateActivityCounters()
+    }
+ 
+  
+ 
+    func removeFreeze() {
+
+        let today = calendar.startOfDay(for: Date())
+
+        guard activity.freezedDates.contains(today) else {
+            return
+        }
+
+        activity.freezedDates.remove(today)
+        activity.isFreezed = false
+
+        streak.lastActivityDate = (
+            activity.learnedDates.union(activity.freezedDates)
+        ).max()
+
+        updateActivityCounters()
+    }
+
+
+
    
 }

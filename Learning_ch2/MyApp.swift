@@ -1,10 +1,20 @@
 import SwiftUI
 
-@main struct MyApp: App {
+@main
+struct MyApp: App {
+
+    @State private var appViewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            onboardingView()
-               
+
+            if appViewModel.hasSavedGoal {
+                CurrentDayView(
+                    selectedPeriod: .week
+                )
+            } else {
+                onboardingView()
+            }
         }
     }
 }

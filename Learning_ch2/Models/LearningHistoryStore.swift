@@ -99,4 +99,14 @@ class LearningHistoryStore {
         let day = calendar.startOfDay(for: date)
         return freezedDates.contains(day)
     }
+    
+    
+    func removeFreezedDate() {
+        let today = Calendar.current.startOfDay(for: Date())
+
+        freezedDates.remove(today)
+        saveDates()
+    }
+    
+
 }
