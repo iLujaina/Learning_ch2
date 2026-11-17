@@ -1,64 +1,105 @@
 
 <div align="center">
 
-# Learning Journey
+# Learning Journey 🔥
 
 ![Learning Journey](./Learning%20Journey%20App%20Hero.png)
 
-**A SwiftUI iOS app designed to help learners build lasting learning habits, maintain streaks, and achieve personal learning goals — one day at a time.**
+**Build consistency. Track progress. Keep learning.**
 
-![Platform](https://img.shields.io/badge/Platform-iOS-000000?style=for-the-badge&logo=apple)
-![Swift](https://img.shields.io/badge/Language-Swift-F05138?style=for-the-badge&logo=swift&logoColor=white)
-![SwiftUI](https://img.shields.io/badge/Framework-SwiftUI-007AFF?style=for-the-badge&logo=swift&logoColor=white)
-![Architecture](https://img.shields.io/badge/Architecture-MVVM-8B5CF6?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In_Development-E68D40?style=for-the-badge)
+A native iOS application built with **SwiftUI** to help learners develop daily learning habits, maintain streaks, and achieve personalized learning goals.
 
-**[Overview](#-overview) · [Features](#-features) · [Architecture](#-architecture) · [Getting Started](#-getting-started) · [Roadmap](#-roadmap)**
+![iOS](https://img.shields.io/badge/Platform-iOS-000000?style=flat-square&logo=apple)
+![Swift](https://img.shields.io/badge/Swift-F05138?style=flat-square&logo=swift&logoColor=white)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-007AFF?style=flat-square&logo=swift&logoColor=white)
+![MVVM](https://img.shields.io/badge/Architecture-MVVM-8B5CF6?style=flat-square)
+![Status](https://img.shields.io/badge/Status-In%20Development-E68D40?style=flat-square)
 
 </div>
 
 ---
 
-## 📖 Overview
+## Overview
 
-Learning Journey is a native iOS app that helps users build consistent learning habits through personalized goals, daily activity tracking, and learning streaks.
+Learning Journey makes building a learning habit simple and measurable.
 
-## ✨ Features
+Users set a learning goal, record daily progress, and track their consistency through learning streaks and an interactive activity calendar.
 
-- 🎯 **Flexible Goals:** Weekly, monthly, and yearly challenges.
-- 🔥 **Learning Streaks:** Track daily consistency with a 32-hour inactivity limit.
-- ❄️ **Freeze Days:** Take a break without increasing or losing your streak.
-- 📅 **Activity Calendar:** Visualize learning and freeze history.
-- 🏆 **Goal Tracking:** Monitor progress and challenge completion.
-- 💾 **Local Persistence:** Save progress using UserDefaults.
+## Features
 
-## 🏗 Architecture
+- **Learning Goals** — Create and update goals for a Week, Month, or Year.
+- **Log as Learned** — Record daily learning with a single tap; tap again to undo.
+- **Freeze for a Day** — Preserve streak continuity during breaks without increasing the streak.
+- **Learning Streak** — Track consecutive learning progress with an automatic reset after 32 hours of inactivity.
+- **Activity Calendar** — View learning history through weekly and scrollable calendar views.
+- **Activity Dashboard** — Monitor the current streak and used freeze days.
+- **Goal Completion** — Display success or expiration states and allow users to set a new goal.
+- **Local Persistence** — Preserve goals, activity history, and streak information using `UserDefaults`.
 
-Built using **MVVM (Model–View–ViewModel)** for clear separation of concerns.
+### Freeze Allowance
 
-| Layer | Responsibility |
+| Week | Month | Year |
+|:---:|:---:|:---:|
+| 2 freezes | 8 freezes | 96 freezes |
+
+## Architecture
+
+Built using **MVVM (Model–View–ViewModel)** with Swift's Observation framework.
+
+```text
+Learning_ch2/
+├── Model/
+│   ├── Model.swift
+│   └── LearningHistoryStore.swift
+├── View/
+│   ├── onboardingView.swift
+│   ├── CurrentDayView.swift
+│   ├── LearningGoalView.swift
+│   └── BeginningView.swift
+├── ViewModels/
+│   ├── AppViewModel.swift
+│   ├── CurrentDayViewModel.swift
+│   └── LearningGoalViewModel.swift
+└── MyApp.swift
+```
+
+**Model** manages learning data and activity history. **ViewModel** handles goal management, streak calculations, and state updates. **View** presents the interface using SwiftUI.
+
+## Tech Stack
+
+| Technology | Purpose |
 |---|---|
-| Model | Learning goals, activities, streaks, and history |
-| View | SwiftUI interfaces and user interactions |
-| ViewModel | Business logic, state management, and persistence coordination |
+| Swift & SwiftUI | Native iOS development |
+| Observation | Reactive state management |
+| HorizonCalendar | Scrollable activity calendar |
+| UserDefaults | Local data persistence |
+| SF Symbols | Native iconography |
+| Liquid Glass | Interface styling |
+| Xcode | Development and testing |
 
-### Tech Stack
-
-**Swift · SwiftUI · Observation · HorizonCalendar · UserDefaults · SF Symbols · Liquid Glass**
-
-## 🚀 Getting Started
+## Getting Started
 
 1. Clone the repository.
-2. Open the project in **Xcode**.
+2. Open `Learning_ch2.xcodeproj` in Xcode.
 3. Resolve the **HorizonCalendar** Swift Package dependency.
-4. Select an iOS Simulator or compatible iPhone.
-5. Build and run the app.
+4. Select a compatible iOS Simulator or device.
+5. Build and run the application (`⌘ + R`).
 
+## Future Improvements
 
-## 🙏 Acknowledgments
+- Push notifications and learning reminders.
+- Detailed learning analytics.
+- Achievement milestones.
+- Automated unit testing.
 
-Built with SwiftUI and [HorizonCalendar](https://github.com/airbnb/HorizonCalendar).
+## Acknowledgments
+
+Developed using Apple's **SwiftUI** framework and Airbnb's [HorizonCalendar](https://github.com/airbnb/HorizonCalendar).
 
 ---
 
-**Build consistency. Track progress. Keep learning. 🔥**
+<div align="center">
+
+**One day at a time. One goal at a time. 🔥**
+
+</div>
