@@ -1,9 +1,9 @@
 
 <div align="center">
 
-# 🔥 Learning Journey
+# Learning Journey
 
-![Learning Journey](assets/learning_journey_app_hero.png)
+![Learning Journey](./Learning%20Journey%20App%20Hero.png)
 
 **A SwiftUI iOS app designed to help learners build lasting learning habits, maintain streaks, and achieve personal learning goals — one day at a time.**
 
@@ -54,12 +54,6 @@ Built using **MVVM (Model–View–ViewModel)** for clear separation of concerns
 4. Select an iOS Simulator or compatible iPhone.
 5. Build and run the app.
 
-## 🗺 Roadmap
-
-- [ ] Learning reminders and notifications
-- [ ] Detailed progress statistics
-- [ ] Achievements and milestones
-- [ ] Automated unit tests
 
 ## 🙏 Acknowledgments
 
