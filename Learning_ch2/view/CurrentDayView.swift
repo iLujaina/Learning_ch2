@@ -1,3 +1,4 @@
+
 //
 //  CurrentDay.swift
 //  MyApp
@@ -20,10 +21,9 @@ struct CurrentDayView: View {
     // MARK: - Properties
 
     @State private var viewModel: CurrentDayViewModel
-    @State private var testTimer: Timer?
+    @State private var statusTimer: Timer?
 
     @Environment(\.scenePhase) private var scenePhase
-
 
     // MARK: - Initialization
 
@@ -32,14 +32,12 @@ struct CurrentDayView: View {
     // Output: A ViewModel configured for the selected period.
 
     init(selectedPeriod: LearningPeriod) {
-
         _viewModel = State(
             initialValue: CurrentDayViewModel(
                 selectedPeriod: selectedPeriod
             )
         )
     }
-
 
     // MARK: - View Body
 
@@ -91,7 +89,6 @@ struct CurrentDayView: View {
                     .foregroundStyle(.white)
                 }
 
-
                 // MARK: - Current Date
 
                 // Input: The current system date.
@@ -107,7 +104,6 @@ struct CurrentDayView: View {
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .foregroundStyle(.gray)
-
 
                 // MARK: - Weekly Calendar
 
@@ -215,7 +211,6 @@ struct CurrentDayView: View {
                 }
                 .padding()
 
-
                 // MARK: - Activity Cards
 
                 // Input: Current streak and freeze usage.
@@ -262,7 +257,6 @@ struct CurrentDayView: View {
                         y: 2
                     )
 
-
                     // MARK: - Freezed Card
 
                     // Input: The number of used freezes.
@@ -302,7 +296,6 @@ struct CurrentDayView: View {
                     )
                 }
 
-
                 // MARK: - Goal Status Content
 
                 // Input: The current goal status.
@@ -326,11 +319,8 @@ struct CurrentDayView: View {
                         Button("Log as Learned") {
 
                             if viewModel.isLearnedToday {
-
                                 viewModel.removeLearning()
-
                             } else {
-
                                 viewModel.logLearning()
                             }
                         }
@@ -360,9 +350,7 @@ struct CurrentDayView: View {
                             && !viewModel.canLogLearning
                         )
 
-
                         Spacer()
-
 
                         // MARK: - Freeze for a Day Button
 
@@ -375,11 +363,8 @@ struct CurrentDayView: View {
                         Button("Freeze for a day") {
 
                             if viewModel.isFreezedToday {
-
                                 viewModel.removeFreeze()
-
                             } else {
-
                                 viewModel.freezeDay()
                             }
                         }
@@ -411,7 +396,6 @@ struct CurrentDayView: View {
                             && !viewModel.canFreeze
                         )
 
-
                         // MARK: - Freeze Usage
 
                         // Input: Used and maximum freeze counts.
@@ -421,7 +405,6 @@ struct CurrentDayView: View {
                         Text(
                             "\(viewModel.activity.freezedDays) out of \(viewModel.maxFreezes) Freezes used"
                         )
-
 
                     case .expired:
 
@@ -439,7 +422,7 @@ struct CurrentDayView: View {
 
                         Text("You didn't reach your goal this time.")
                             .font(
-                                .system(size: 28, weight: .bold)
+                                .system(size: 20, weight: .bold)
                             )
 
                         Text("Want to set another goal?")
@@ -447,6 +430,30 @@ struct CurrentDayView: View {
 
                         Spacer()
 
+                        NavigationLink {
+                            LearningGoalView()
+                        } label: {
+
+                            Label(
+                                "Set a Goal",
+                                systemImage: "pencil.and.outline"
+                            )
+                            .font(.system(size: 18))
+                            .foregroundStyle(.white)
+                            .frame(width: 140, height: 50)
+                            .glassEffect(
+                                .regular.tint(
+                                    Color(
+                                        red: 1,
+                                        green: 146/255,
+                                        blue: 48/255
+                                    )
+                                ),
+                                in: .rect(cornerRadius: 25)
+                            )
+                        }
+
+                        Spacer()
 
                     case .done:
 
@@ -471,6 +478,31 @@ struct CurrentDayView: View {
                             .foregroundStyle(.gray)
 
                         Spacer()
+
+                        NavigationLink {
+                            LearningGoalView()
+                        } label: {
+
+                            Label(
+                                "Set a Goal",
+                                systemImage: "pencil.and.outline"
+                            )
+                            .font(.system(size: 18))
+                            .foregroundStyle(.white)
+                            .frame(width: 140, height: 50)
+                            .glassEffect(
+                                .regular.tint(
+                                    Color(
+                                        red: 1,
+                                        green: 146/255,
+                                        blue: 48/255
+                                    )
+                                ),
+                                in: .rect(cornerRadius: 25)
+                            )
+                        }
+
+                        Spacer()
                     }
                 }
             }
@@ -487,17 +519,15 @@ struct CurrentDayView: View {
 
             viewModel.refreshStatus()
 
-            testTimer?.invalidate()
+            statusTimer?.invalidate()
 
-            testTimer = Timer.scheduledTimer(
+            statusTimer = Timer.scheduledTimer(
                 withTimeInterval: 1,
                 repeats: true
             ) { _ in
-
                 viewModel.refreshStatus()
             }
         }
-
 
         // MARK: - App Lifecycle
 
@@ -509,11 +539,9 @@ struct CurrentDayView: View {
         .onChange(of: scenePhase) { _, newPhase in
 
             if newPhase == .active {
-
                 viewModel.refreshStatus()
             }
         }
-
 
         // MARK: - Timer Cleanup
 
@@ -523,17 +551,15 @@ struct CurrentDayView: View {
 
         .onDisappear {
 
-            testTimer?.invalidate()
-            testTimer = nil
+            statusTimer?.invalidate()
+            statusTimer = nil
         }
     }
 }
 
-
 // MARK: - Preview
 
 #Preview {
-
     CurrentDayView(selectedPeriod: .week)
         .preferredColorScheme(.dark)
 }
